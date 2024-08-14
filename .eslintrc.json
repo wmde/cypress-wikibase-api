@@ -1,0 +1,14 @@
+{
+	"extends": "wikimedia/server",
+	"env": {
+		"commonjs": true,
+		"es6": true,
+		"node": true
+	},
+	"parserOptions": {
+		"ecmaVersion": 2017
+	},
+	"rules": {
+		"max-len": [ "error", 120 ]
+	}
+}
