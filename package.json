@@ -1,0 +1,34 @@
+{
+	"main": "src/index.js",
+	"files": [
+		"src"
+	],
+	"dependencies": {
+		"api-testing": "^1.7.0"
+	},
+	"name": "cypress-wikibase-api",
+	"version": "0.0.1",
+	"description": "Support package for developing cypress tests that use the Wikibase API",
+	"homepage": "https://github.com/wmde/cypress-wikibase-api",
+	"bugs": "https://phabricator.wikimedia.org",
+	"license": "GPL-2.0-or-later",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/wmde/cypress-wikibase-api"
+	},
+	"keywords": [
+		"mediawiki",
+		"wikibase",
+		"cypress-plugin"
+	],
+	"engines": {
+		"node": ">=18.0"
+	},
+	"scripts": {
+		"test": "eslint ."
+	},
+	"devDependencies": {
+		"eslint": "^8.57.0",
+		"eslint-config-wikimedia": "^0.28.2"
+	}
+}
