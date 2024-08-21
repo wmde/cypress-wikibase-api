@@ -82,6 +82,35 @@ module.exports = {
 			return token;
 		}
 
+		async function createEntity( entityType, label, data ) {
+			const itemData = {};
+			let labels = {};
+
+			if ( typeof label === 'object' ) {
+				labels = label;
+			} else if ( label ) {
+				labels = {
+					en: {
+						language: 'en',
+						value: label
+					}
+				};
+			}
+
+			Object.assign( itemData, { labels }, data );
+
+			const bot = await botUser();
+			const botToken = await getBotEditToken( bot );
+
+			const response = await bot.request( {
+				action: 'wbeditentity',
+				new: entityType,
+				data: JSON.stringify( itemData ),
+				token: botToken
+			}, true );
+			return response.body.entity.id;
+		}
+
 		return {
 			async 'MwApi:BlockUser'( { username, reason, expiry } ) {
 				const rootClient = await root();
@@ -108,32 +137,10 @@ module.exports = {
 				return Promise.resolve( { username, password } );
 			},
 			async 'MwApi:CreateItem'( { label, data } ) {
-				const itemData = {};
-				let labels = {};
-
-				if ( typeof label === 'object' ) {
-					labels = label;
-				} else if ( label ) {
-					labels = {
-						en: {
-							language: 'en',
-							value: label
-						}
-					};
-				}
-
-				Object.assign( itemData, { labels }, data );
-
-				const bot = await botUser();
-				const botToken = await getBotEditToken( bot );
-
-				const response = await bot.request( {
-					action: 'wbeditentity',
-					new: 'item',
-					data: JSON.stringify( itemData ),
-					token: botToken
-				}, true );
-				return response.body.entity.id;
+				return createEntity( 'item', label, data );
+			},
+			async 'MwApi:CreateEntity'( { entityType, label, data } ) {
+				return createEntity( entityType, label, data );
 			},
 			async 'MwApi:GetEntityData'( { entityId } ) {
 				const bot = await botUser();
