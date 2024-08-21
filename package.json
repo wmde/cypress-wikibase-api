@@ -7,7 +7,7 @@
 		"api-testing": "^1.7.0"
 	},
 	"name": "cypress-wikibase-api",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "Support package for developing cypress tests that use the Wikibase API",
 	"homepage": "https://github.com/wmde/cypress-wikibase-api",
 	"bugs": "https://phabricator.wikimedia.org",
