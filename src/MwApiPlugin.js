@@ -149,6 +149,22 @@ module.exports = {
 					action: 'wbgetentities',
 					ids: entityId
 				} ).then( ( response ) => response.body.entities[ entityId ] );
+			},
+			async 'MwApi:UnblockUser'( { username, reason } ) {
+				const rootClient = await root();
+				const unblockResult = await rootClient.action( 'unblock', {
+					user: username,
+					assert: 'user',
+					reason: reason || 'Unblocked user',
+					token: await rootClient.token()
+				}, 'POST' );
+
+				if ( !unblockResult.unblock ) {
+					return Promise.reject( new Error( 'Failed to unblock user.' ) );
+				}
+
+				return Promise.resolve( null );
+
 			}
 		};
 	}
