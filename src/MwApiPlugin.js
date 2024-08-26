@@ -37,7 +37,9 @@ module.exports = {
 				throw new Error( 'Failed to get the root user tokens.' );
 			}
 
-			state.users.root = rootClient;
+			if ( withCache ) {
+				state.users.root = rootClient;
+			}
 			return rootClient;
 		}
 
