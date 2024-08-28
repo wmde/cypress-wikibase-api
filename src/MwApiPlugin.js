@@ -166,7 +166,15 @@ module.exports = {
 				}
 
 				return Promise.resolve( null );
-
+			},
+			async 'MwApi:BotRequest'( { isEdit, isPost, parameters } ) {
+				const bot = await botUser();
+				const requestParams = Object.assign( {}, parameters );
+				if ( isEdit ) {
+					const botToken = await getBotEditToken( bot );
+					requestParams.token = botToken;
+				}
+				return bot.request( requestParams, isPost ).then( ( response ) => response.body );
 			}
 		};
 	}
