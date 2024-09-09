@@ -113,6 +113,32 @@ module.exports = {
 			return response.body.entity.id;
 		}
 
+		async function createProperty( datatype, label, data ) {
+			const propertyData = {};
+			let labels = {};
+
+			if ( typeof label === 'object' ) {
+				labels = label;
+			} else if ( label ) {
+				labels = {
+					en: {
+						language: 'en',
+						value: label
+					}
+				};
+			}
+
+			Object.assign( propertyData, { datatype, labels }, data );
+
+			const rootClient = await root();
+			const response = await rootClient.action( 'wbeditentity', {
+				new: 'property',
+				data: JSON.stringify( propertyData ),
+				token: await rootClient.token()
+			}, 'POST' );
+			return response.entity.id;
+		}
+
 		return {
 			async 'MwApi:BlockUser'( { username, reason, expiry } ) {
 				const rootClient = await root();
@@ -143,6 +169,16 @@ module.exports = {
 			},
 			async 'MwApi:CreateEntity'( { entityType, label, data } ) {
 				return createEntity( entityType, label, data );
+			},
+			async 'MwApi:CreateProperty'( { datatype, label, data } ) {
+				return createProperty( datatype, label, data );
+			},
+			async 'MwApi:GetOrCreatePropertyIdByDataType'( { datatype } ) {
+				if ( cypressConfig.wikibasePropertyIds && cypressConfig.wikibasePropertyIds[ datatype ] ) {
+					return Promise.resolve( cypressConfig.wikibasePropertyIds[ datatype ] );
+				} else {
+					return createProperty( datatype, utils.title( datatype ) );
+				}
 			},
 			async 'MwApi:GetEntityData'( { entityId } ) {
 				const bot = await botUser();
