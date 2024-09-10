@@ -174,10 +174,17 @@ module.exports = {
 				return createProperty( datatype, label, data );
 			},
 			async 'MwApi:GetOrCreatePropertyIdByDataType'( { datatype } ) {
-				if ( cypressConfig.wikibasePropertyIds && cypressConfig.wikibasePropertyIds[ datatype ] ) {
+				if ( !( 'wikibasePropertyIds' in cypressConfig ) ) {
+					cypressConfig.wikibasePropertyIds = {};
+				}
+				if ( cypressConfig.wikibasePropertyIds[ datatype ] ) {
 					return Promise.resolve( cypressConfig.wikibasePropertyIds[ datatype ] );
 				} else {
-					return createProperty( datatype, utils.title( datatype ) );
+					return createProperty( datatype, utils.title( datatype ) )
+						.then( ( propertyId ) => {
+							cypressConfig.wikibasePropertyIds[ datatype ] = propertyId;
+							return propertyId;
+						} );
 				}
 			},
 			async 'MwApi:GetEntityData'( { entityId } ) {
