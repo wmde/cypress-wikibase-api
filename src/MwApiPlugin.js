@@ -139,6 +139,26 @@ module.exports = {
 			return response.entity.id;
 		}
 
+		async function addSense( lexemeId, data ) {
+			const rootClient = await root();
+			const response = await rootClient.action( 'wbladdsense', {
+				lexemeId,
+				data: JSON.stringify( data ),
+				token: await rootClient.token()
+			}, 'POST' );
+			return response.sense.id;
+		}
+
+		async function addForm( lexemeId, data ) {
+			const rootClient = await root();
+			const response = await rootClient.action( 'wbladdform', {
+				lexemeId,
+				data: JSON.stringify( data ),
+				token: await rootClient.token()
+			}, 'POST' );
+			return response.form.id;
+		}
+
 		return {
 			async 'MwApi:BlockUser'( { username, reason, expiry } ) {
 				const rootClient = await root();
@@ -172,6 +192,12 @@ module.exports = {
 			},
 			async 'MwApi:CreateProperty'( { datatype, label, data } ) {
 				return createProperty( datatype, label, data );
+			},
+			async 'MwApi:AddSense'( { lexemeId, data } ) {
+				return addSense( lexemeId, data );
+			},
+			async 'MwApi:AddForm'( { lexemeId, data } ) {
+				return addForm( lexemeId, data );
 			},
 			async 'MwApi:GetOrCreatePropertyIdByDataType'( { datatype } ) {
 				if ( !( 'wikibasePropertyIds' in cypressConfig ) ) {
