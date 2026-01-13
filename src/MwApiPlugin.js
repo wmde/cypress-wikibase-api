@@ -13,9 +13,6 @@ const state = {
 	users: {
 		root: null,
 		bot: null
-	},
-	tokens: {
-		botToken: null
 	}
 };
 
@@ -61,29 +58,6 @@ module.exports = {
 			return rootUser;
 		}
 
-		async function getBotEditToken( bot ) {
-			if ( state.tokens.botToken ) {
-				return state.tokens.botToken;
-			}
-			const token = await bot.request( {
-				action: 'query',
-				meta: 'tokens',
-				type: 'csrf'
-			} ).then( ( response ) => {
-				if ( response.body.query && response.body.query.tokens && response.body.query.tokens.csrftoken ) {
-					return response.body.query.tokens.csrftoken;
-				} else {
-					const err = new Error( 'Could not get edit token' );
-					err.response = response;
-					throw err;
-				}
-			} );
-
-			state.tokens.botToken = token;
-
-			return token;
-		}
-
 		async function createEntity( entityType, label, data ) {
 			const itemData = {};
 			let labels = {};
@@ -102,13 +76,12 @@ module.exports = {
 			Object.assign( itemData, { labels }, data );
 
 			const bot = await botUser();
-			const botToken = await getBotEditToken( bot );
 
 			const response = await bot.request( {
 				action: 'wbeditentity',
 				new: entityType,
 				data: JSON.stringify( itemData ),
-				token: botToken
+				token: await bot.token()
 			}, true );
 			return response.body.entity.id;
 		}
@@ -240,8 +213,7 @@ module.exports = {
 				const bot = await botUser();
 				const requestParams = Object.assign( {}, parameters );
 				if ( isEdit ) {
-					const botToken = await getBotEditToken( bot );
-					requestParams.token = botToken;
+					requestParams.token = await bot.token();
 				}
 				return bot.request( requestParams, isPost ).then( ( response ) => response.body );
 			}
