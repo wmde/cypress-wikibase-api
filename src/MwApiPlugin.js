@@ -77,8 +77,7 @@ module.exports = {
 
 			const bot = await botUser();
 
-			const response = await bot.request( {
-				action: 'wbeditentity',
+			const response = await bot.action( 'wbeditentity', {
 				new: entityType,
 				data: JSON.stringify( itemData ),
 				token: await bot.token()
@@ -189,8 +188,7 @@ module.exports = {
 			async 'MwApi:GetEntityData'( { entityId } ) {
 				const bot = await botUser();
 
-				return bot.request( {
-					action: 'wbgetentities',
+				return bot.action( 'wbgetentities', {
 					ids: entityId
 				} ).then( ( response ) => response.body.entities[ entityId ] );
 			},
@@ -212,10 +210,12 @@ module.exports = {
 			async 'MwApi:BotRequest'( { isEdit, isPost, parameters } ) {
 				const bot = await botUser();
 				const requestParams = Object.assign( {}, parameters );
+				const action = requestParams.action;
+				delete requestParams.action;
 				if ( isEdit ) {
 					requestParams.token = await bot.token();
 				}
-				return bot.request( requestParams, isPost ).then( ( response ) => response.body );
+				return bot.action( action, requestParams, isPost ).then( ( response ) => response.body );
 			}
 		};
 	}
