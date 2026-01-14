@@ -82,7 +82,7 @@ module.exports = {
 				data: JSON.stringify( itemData ),
 				token: await bot.token()
 			}, true );
-			return response.body.entity.id;
+			return response.entity.id;
 		}
 
 		async function createProperty( datatype, label, data ) {
@@ -190,7 +190,7 @@ module.exports = {
 
 				return bot.action( 'wbgetentities', {
 					ids: entityId
-				} ).then( ( response ) => response.body.entities[ entityId ] );
+				} ).then( ( response ) => response.entities[ entityId ] );
 			},
 			async 'MwApi:UnblockUser'( { username, reason } ) {
 				const rootClient = await root();
@@ -215,7 +215,7 @@ module.exports = {
 				if ( isEdit ) {
 					requestParams.token = await bot.token();
 				}
-				return bot.action( action, requestParams, isPost ).then( ( response ) => response.body );
+				return bot.action( action, requestParams, isPost );
 			}
 		};
 	}
