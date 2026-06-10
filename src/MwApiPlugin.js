@@ -136,7 +136,7 @@ module.exports = {
 			await rootClient.action( 'delete', {
 				title,
 				reason: 'Cypress MwApi Deletion',
-				token: await rootClient.token(),
+				token: await rootClient.token()
 			}, 'POST' );
 			return null;
 		}
