@@ -131,6 +131,16 @@ module.exports = {
 			return response.form.id;
 		}
 
+		async function deletePage( title ) {
+			const rootClient = await root();
+			await rootClient.action( 'delete', {
+				title,
+				reason: 'Cypress MwApi Deletion',
+				token: await rootClient.token(),
+			}, 'POST' );
+			return null;
+		}
+
 		return {
 			async 'MwApi:BlockUser'( { username, reason, expiry } ) {
 				const rootClient = await root();
@@ -191,6 +201,9 @@ module.exports = {
 				return bot.action( 'wbgetentities', {
 					ids: entityId
 				} ).then( ( response ) => response.entities[ entityId ] );
+			},
+			async 'MwApi:DeletePage'( { title } ) {
+				return deletePage( title );
 			},
 			async 'MwApi:UnblockUser'( { username, reason } ) {
 				const rootClient = await root();
