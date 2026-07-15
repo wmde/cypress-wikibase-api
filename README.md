@@ -26,6 +26,18 @@ npm rm cypress-wikibase-api
 npm i -D ~/work/cypress-wikibase-api
 ```
 
+## Github workflows
+
+The repository is hosted on Github and includes pipelines for testing code when changes are pushed, and testing / releasing code to npm when new releases are published.
+
+### `test` workflow
+
+This workflow runs when pull requests are made, and when the `main` branch is updated. See `.github/workflows/test.yml`.
+
+### `publish` workflow
+
+This workflow runs when a new release is published on Github. The workflow runs the test suite and then stages a release at https://www.npmjs.org . An authorized user must then approve the staged release in order for it to be made public at https://registry.npmjs.org .
+
 ## Contributing
 
 Please file any bugs or issues with our issue-tracker at [phabricator.wikimedia.org](https://phabricator.wikimedia.org/maniphest/task/edit/form/1/?tags=Wikidata,Browser-Tests).
